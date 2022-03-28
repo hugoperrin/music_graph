@@ -1,29 +1,41 @@
+from abc import abstractmethod
+from typing import List
 from music_graph.datamodel.album import AlbumData
 from music_graph.datamodel.artist import ArtistData
 from music_graph.datamodel.playlist import PlaylistData
 from music_graph.datamodel.track import TrackData
-
-from music_graph.abstract.client import AbstractStreamingAPIClient
 from music_graph.datamodel.user_info import UserInfo
 
 
-class TidalStreamingAPIClient(AbstractStreamingAPIClient):
+class AbstractStreamingAPIClient:
+    @abstractmethod
     def get_track(self, track_id: str) -> TrackData:
-        # TODO: do track fetching and abstraction to track data
         ...
 
+    @abstractmethod
     def get_album(self, album_id: str) -> AlbumData:
-        # TODO: do track fetching and abstraction to album data
         ...
 
+    @abstractmethod
     def get_artist(self, artist_id: str) -> ArtistData:
-        # TODO: do track fetching and abstraction to artist data
         ...
 
+    @abstractmethod
     def get_playlist(self, playlist_id: str) -> PlaylistData:
-        # TODO: do track fetching and abstraction to playlist data
         ...
 
+    @abstractmethod
     def get_user_info(self, user_id: str) -> UserInfo:
-        # TODO: do the fetching of an user information
+        ...
+
+    @abstractmethod
+    def get_artist_neighbors(self, artist_id: str) -> List[str]:
+        ...
+
+    @abstractmethod
+    def get_playlist_neighbors(self, playlist_id: str) -> List[str]:
+        ...
+
+    @abstractmethod
+    def get_track_neighbors(self, track_id: str) -> List[str]:
         ...

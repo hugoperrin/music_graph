@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import List
+from typing import Dict, List
 
 
 @dataclass()
@@ -13,3 +13,12 @@ class PlaylistData:
     @property
     def data_id(self) -> str:
         return self.id
+
+    def to_dict(self) -> Dict:
+        return {
+            "data_id": self.data_id,
+            "follower_number": self.follower_number,
+            "uri": self.uri,
+            "name": self.name,
+            "track_ids": self.track_ids,
+        }

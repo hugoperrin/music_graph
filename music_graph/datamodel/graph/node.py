@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 from music_graph.datamodel.base_data import BaseData
 
@@ -17,3 +17,9 @@ class GraphNode:
     object: BaseData
     neighbor_ids: List[NeighborData]
     value: Optional[float] = None
+
+    def to_node_dict(self, add_object_data: bool = False) -> Dict:
+        base_data: Dict = {"id": self.id, "value": self.value}
+        if add_object_data:
+            base_data.update(self.object.to_dict())
+        return base_data

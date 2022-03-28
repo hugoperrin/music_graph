@@ -28,6 +28,7 @@ fire = "^0.4.0"
 
 spotipy = {version = "^2.19.0", optional = true}
 tidalapi = {version = "^0.6.10", optional = true}
+networkx = "^2.7.1"
 
 [tool.poetry.extras]
 spotify = ["spotipy"]

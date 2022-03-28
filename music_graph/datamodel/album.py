@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import List
+from typing import Dict, List
 
 
 @dataclass()
@@ -17,3 +17,16 @@ class AlbumData:
     @property
     def data_id(self) -> str:
         return self.id
+
+    def to_dict(self) -> Dict:
+        return {
+            "data_id": self.data_id,
+            "type": self.type,
+            "uri": self.uri,
+            "name": self.name,
+            "href": self.href,
+            "number_of_tracks": self.number_of_tracks,
+            "artist_ids": self.artist_ids,
+            "genres": self.genres,
+            "track_ids": self.track_ids,
+        }

@@ -7,7 +7,7 @@ from music_graph.abstract.client import AbstractStreamingAPIClient
 from music_graph.datamodel.user_info import UserInfo
 
 
-class TidalStreamingAPIClient(AbstractStreamingAPIClient):
+class SpotifyStreamingAPIClient(AbstractStreamingAPIClient):
     def get_track(self, track_id: str) -> TrackData:
         # TODO: do track fetching and abstraction to track data
         ...
