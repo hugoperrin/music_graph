@@ -1,4 +1,4 @@
-from typing import Dict, Optional, Tuple, Union
+from typing import Dict, List, Optional, Tuple, Union
 
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials, SpotifyOAuth
@@ -162,6 +162,57 @@ class SpotifyStreamingAPIClient(AbstractStreamingAPIClient):
             )
         else:
             return UserInfo.from_spotify_dict(user_data)
+
+    def get_artist_neighbors(self, artist_id: str) -> List[str]:
+        """Get similar artists
+
+        Args:
+            artist_id (str): The artist id
+
+        Returns:
+            List[str]: The list of ids
+
+        Examples:
+            >>> client = SpotifyStreamingAPIClient.from_env()
+            >>> _id: str = "36QJpDe2go2KgaRleHCDTp"
+            >>> ids: List[str] = client.get_artist_neighbors(_id)
+            >>> isinstance(ids, list)
+            True
+            >>> ids
+            ['568ZhdwyaiCyOGJRtNYhWf', '776Uo845nYHJpNaStv1Ds4', '22WZ7M8sxp5THdruNY3gXt', '74oJ4qxwOZvX6oSsu1DGnw', '4MVyzYMgTwdP7Z49wAZHx0', '67ea9eGLXYMsO2eYQRui3w', '0qEcf3SFlpRcb3lK3f2GZI', '2AM4ilv6UzW0uMRuqKtDgN', '00tVTdpEhQQw1bqdu8RCx2', '5M52tdBnJaKSvOpJGz8mfZ', '1OwarW4LEHnoep20ixRA0y', '1WRM9i067hd2ujxxi8FI3m', '5krkohEVJYw0qoB5VWwxaC', '6biWAmrHyiMkX49LkycGqQ', '2e53aHBQdCMKWqHDuyJsjC', '6QtGlUje9TIkLrgPZrESuk', '21ysNsPzHdqYN2fQ75ZswG', '22bE4uQ6baNwSHPVcDxLCe', '4wQ3PyMz3WwJGI5uEqHUVR', '2lxX1ivRYp26soIavdG9bX']
+        """
+        similar_artists: Dict = self.spotify_client.artist_related_artists(
+            artist_id=artist_id
+        )
+        return [a["id"] for a in similar_artists["artists"]]
+
+    def get_playlist_neighbors(self, playlist_id: str) -> List[str]:
+        raise NotImplementedError(
+            "Spotify does not allow getting similar playlists from playlists"
+        )
+
+    def get_track_neighbors(self, track_id: str) -> List[str]:
+        """Get similar tracks
+
+        Args:
+            track_id (str): The track id
+
+        Returns:
+            List[str]: The list of ids
+
+        Examples:
+            >>> client = SpotifyStreamingAPIClient.from_env()
+            >>> _id: str = "6rqhFgbbKwnb9MLmUQDhG6"
+            >>> ids: List[str] = client.get_track_neighbors(_id)
+            >>> isinstance(ids, list)
+            True
+            >>> for _id in ids:
+            ...     assert(isinstance(_id, str))
+            """
+        similar_track_data: Dict = self.spotify_client.recommendations(
+            seed_tracks=[track_id]
+        )
+        return [t["id"] for t in similar_track_data["tracks"]]
 
     @classmethod
     def from_env(cls, scope: Optional[Union[str, Tuple]] = None):
