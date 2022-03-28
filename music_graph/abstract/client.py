@@ -1,5 +1,6 @@
 from abc import abstractmethod
 from typing import List
+
 from music_graph.datamodel.album import AlbumData
 from music_graph.datamodel.artist import ArtistData
 from music_graph.datamodel.playlist import PlaylistData

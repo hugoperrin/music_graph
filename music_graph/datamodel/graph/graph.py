@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Dict, Hashable, List, Tuple
 
 import networkx as nx
@@ -8,9 +8,9 @@ from music_graph.datamodel.graph.node import GraphNode
 
 @dataclass()
 class MusicGraph:
-    graph: nx.Graph
-    node_aliases: Dict[Hashable, List[Hashable]]
-    raw_node: Dict[Hashable, GraphNode]
+    graph: nx.Graph = nx.Graph()
+    node_aliases: Dict[Hashable, List[Hashable]] = field(default_factory=dict)
+    raw_node: Dict[Hashable, GraphNode] = field(default_factory=dict)
 
     def add_node(self, node: GraphNode):
         node_id: str = self.resolve_id(node)

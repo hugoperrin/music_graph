@@ -24,6 +24,28 @@ class TrackData:
     def data_id(self) -> str:
         return self.id
 
+    @classmethod
+    def from_spotify_dict(
+        cls, track_id: str, track_data: Dict, audio_analysis: Optional[Dict] = None
+    ):
+        return cls(
+            id=track_id,
+            album_id=track_data["album"]["id"],
+            artist_ids=[artist_dict["id"] for artist_dict in track_data["artists"]],
+            duration=track_data["duration_ms"],
+            api_href=track_data["href"],
+            linked_track_ids=[],
+            uri=track_data["uri"],
+            track_number=track_data["track_number"],
+            name=track_data["name"],
+            popularity=track_data["popularity"],
+            preview_url=track_data["preview_url"],
+            track_playlist_ids=[],
+            audio_analysis=audio_analysis
+            if audio_analysis is None
+            else AudioAnalysis.from_dict(audio_analysis),
+        )
+
     def to_dict(self) -> Dict:
         audio_analysis: Optional[Dict] = None
         if self.audio_analysis:

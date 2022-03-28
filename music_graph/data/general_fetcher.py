@@ -1,16 +1,13 @@
+from enum import Enum
 from typing import Dict, Hashable
+
+from music_graph.abstract.client import AbstractStreamingAPIClient
 from music_graph.abstract.fetcher import AbstractFetcher
-from music_graph.datamodel.album import AlbumData
 from music_graph.datamodel.artist import ArtistData
 from music_graph.datamodel.graph.graph import MusicGraph
-from music_graph.abstract.client import AbstractStreamingAPIClient
-
-
-from enum import Enum
-from music_graph.datamodel.graph.node import GraphNode
+from music_graph.datamodel.graph.node import GraphNode, NeighborData
 from music_graph.datamodel.playlist import PlaylistData
 from music_graph.datamodel.track import TrackData
-
 from music_graph.datamodel.user_info import UserInfo
 
 
@@ -23,7 +20,9 @@ class GraphBuildingModeEnum(Enum):
 
 class GeneralFetcher(AbstractFetcher):
     def __init__(
-        self, client: AbstractStreamingAPIClient, graph_building_mode: GraphBuildingModeEnum,
+        self,
+        client: AbstractStreamingAPIClient,
+        graph_building_mode: GraphBuildingModeEnum,
     ) -> None:
         self.client = client
         self.graph_building_mode = graph_building_mode
@@ -43,6 +42,8 @@ class GeneralFetcher(AbstractFetcher):
             return self.build_playlist_graph(user_info)
         elif self.graph_building_mode == GraphBuildingModeEnum.TRACK:
             return self.build_track_graph(user_info)
+        else:
+            raise NotImplementedError()
 
     def enhance_recursive_graph(self, graph: MusicGraph) -> MusicGraph:
         # TODO: do the enhancing recursively by adding nodes which are close to the initial graph, but are not in the initial graph.
@@ -57,7 +58,17 @@ class GeneralFetcher(AbstractFetcher):
             artist_raw_data[artist_data.id] = artist_data
         for data in artist_raw_data.values():
             neighbor_ids = self.client.get_artist_neighbors(data.id)
-            graph.add_node(node=GraphNode(id=data.id, object=data, neighbor_ids=neighbor_ids, value=1.0))
+            graph.add_node(
+                node=GraphNode(
+                    id=data.id,
+                    object=data,
+                    neighbor_ids=[
+                        NeighborData(id=n, edge_weight=1.0, edge_cap=1.0)
+                        for n in neighbor_ids
+                    ],
+                    value=1.0,
+                )
+            )
         return graph
 
     def build_album_graph(self, user_info: UserInfo) -> MusicGraph:
@@ -69,11 +80,23 @@ class GeneralFetcher(AbstractFetcher):
         graph: MusicGraph = MusicGraph()
         playlist_raw_data: Dict[Hashable, PlaylistData] = {}
         for playlist_id in user_info.artist_ids:
-            playlist_data: PlaylistData = self.client.get_playlist(playlist_id=playlist_id)
+            playlist_data: PlaylistData = self.client.get_playlist(
+                playlist_id=playlist_id
+            )
             playlist_raw_data[playlist_data.id] = playlist_data
         for data in playlist_raw_data.values():
             neighbor_ids = self.client.get_playlist_neighbors(data.id)
-            graph.add_node(node=GraphNode(id=data.id, object=data, neighbor_ids=neighbor_ids, value=1.0))
+            graph.add_node(
+                node=GraphNode(
+                    id=data.id,
+                    object=data,
+                    neighbor_ids=[
+                        NeighborData(id=n, edge_weight=1.0, edge_cap=1.0)
+                        for n in neighbor_ids
+                    ],
+                    value=1.0,
+                )
+            )
         return graph
 
     def build_track_graph(self, user_info: UserInfo) -> MusicGraph:
@@ -85,5 +108,15 @@ class GeneralFetcher(AbstractFetcher):
             track_raw_data[track_data.id] = track_data
         for data in track_raw_data.values():
             neighbor_ids = self.client.get_track_neighbors(data.id)
-            graph.add_node(node=GraphNode(id=data.id, object=data, neighbor_ids=neighbor_ids, value=1.0))
+            graph.add_node(
+                node=GraphNode(
+                    id=data.id,
+                    object=data,
+                    neighbor_ids=[
+                        NeighborData(id=n, edge_weight=1.0, edge_cap=1.0)
+                        for n in neighbor_ids
+                    ],
+                    value=1.0,
+                )
+            )
         return graph
