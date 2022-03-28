@@ -14,6 +14,16 @@ class PlaylistData:
     def data_id(self) -> str:
         return self.id
 
+    @classmethod
+    def from_spotify_dict(cls, playlist_data: Dict):
+        return cls(
+            id=playlist_data["id"],
+            follower_number=playlist_data["followers"]["total"],
+            uri=playlist_data["uri"],
+            name=playlist_data["name"],
+            track_ids=[t["track"]["id"] for t in playlist_data["tracks"]["items"]],
+        )
+
     def to_dict(self) -> Dict:
         return {
             "data_id": self.data_id,

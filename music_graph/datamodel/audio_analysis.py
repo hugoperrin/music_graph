@@ -10,12 +10,22 @@ class Bar:
     """
 
     start: float
-    end: float
+    duration: float
     confidence: float
+
+    @staticmethod
+    def from_dict(data_dict: Dict):
+        return Bar(
+            start=data_dict["start"],
+            duration=data_dict["duration"],
+            confidence=data_dict["confidence"],
+        )
 
     def to_dict(self) -> Dict:
         return {
-            "start": self.start, "end": self.end, "confidence": self.confidence,
+            "start": self.start,
+            "duration": self.duration,
+            "confidence": self.confidence,
         }
 
 
@@ -27,12 +37,22 @@ class Tatum:
     """
 
     start: float
-    end: float
+    duration: float
     confidence: float
+
+    @staticmethod
+    def from_dict(data_dict: Dict):
+        return Tatum(
+            start=data_dict["start"],
+            duration=data_dict["duration"],
+            confidence=data_dict["confidence"],
+        )
 
     def to_dict(self) -> Dict:
         return {
-            "start": self.start, "end": self.end, "confidence": self.confidence,
+            "start": self.start,
+            "duration": self.duration,
+            "confidence": self.confidence,
         }
 
 
@@ -50,6 +70,23 @@ class Section:
     mode_confidence: float
     time_signature: int
     time_signature_confidence: float
+
+    @staticmethod
+    def from_dict(data_dict: Dict):
+        return Section(
+            start=data_dict["start"],
+            duration=data_dict["duration"],
+            confidence=data_dict["confidence"],
+            loudness=data_dict["loudness"],
+            tempo=data_dict["tempo"],
+            tempo_confidence=data_dict["tempo_confidence"],
+            key=data_dict["key"],
+            key_confidence=data_dict["key_confidence"],
+            mode=data_dict["mode"],
+            mode_confidence=data_dict["mode_confidence"],
+            time_signature=data_dict["time_signature"],
+            time_signature_confidence=data_dict["time_signature_confidence"],
+        )
 
     def to_dict(self) -> Dict:
         return {
@@ -86,6 +123,20 @@ class Segment:
     pitches: List[float]
     timbre: List[float]
 
+    @staticmethod
+    def from_dict(data_dict: Dict):
+        return Segment(
+            start=data_dict["start"],
+            duration=data_dict["duration"],
+            confidence=data_dict["confidence"],
+            loudness_start=data_dict["loudness_start"],
+            loudness_max=data_dict["loudness_max"],
+            loudness_max_time=data_dict["loudness_max_time"],
+            loudness_end=data_dict["loudness_end"],
+            pitches=data_dict["pitches"],
+            timbre=data_dict["timbre"],
+        )
+
     def to_dict(self) -> Dict:
         return {
             "start": self.start,
@@ -108,7 +159,7 @@ class AudioAnalysis:
 
     num_samples: int
     duration: float
-    channels: int
+    channels: Optional[int]
     loudness: float
     tempo: float
     tempo_confidence: float
@@ -131,6 +182,36 @@ class AudioAnalysis:
     segments: List[Segment] = field(default_factory=list)
     tatums: List[Tatum] = field(default_factory=list)
     metadata: Dict = field(default_factory=dict)
+
+    @classmethod
+    def from_dict(cls, data_dict: Dict):
+        return cls(
+            num_samples=data_dict["track"]["num_samples"],
+            duration=data_dict["track"]["duration"],
+            channels=data_dict["track"].get("channels"),
+            loudness=data_dict["track"]["loudness"],
+            tempo=data_dict["track"]["tempo"],
+            tempo_confidence=data_dict["track"]["tempo_confidence"],
+            time_signature=data_dict["track"]["time_signature"],
+            time_signature_confidence=data_dict["track"]["time_signature_confidence"],
+            key=data_dict["track"]["key"],
+            key_confidence=data_dict["track"]["key_confidence"],
+            mode=data_dict["track"]["mode"],
+            mode_confidence=data_dict["track"]["mode_confidence"],
+            codestring=data_dict["track"]["codestring"],
+            code_version=data_dict["track"]["code_version"],
+            echoprintstring=data_dict["track"]["echoprintstring"],
+            echoprint_version=data_dict["track"]["echoprint_version"],
+            synchstring=data_dict["track"]["synchstring"],
+            synch_version=data_dict["track"]["synch_version"],
+            rhythmstring=data_dict["track"]["rhythmstring"],
+            rhythm_version=data_dict["track"]["rhythm_version"],
+            bars=[Bar.from_dict(bar) for bar in data_dict["bars"]],
+            sections=[Section.from_dict(sec) for sec in data_dict["sections"]],
+            segments=[Segment.from_dict(seg) for seg in data_dict["segments"]],
+            tatums=[Tatum.from_dict(tatum) for tatum in data_dict["tatums"]],
+            metadata=data_dict.get("meta", {}),
+        )
 
     def to_dict(self) -> Dict:
         return {

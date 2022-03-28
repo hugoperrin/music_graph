@@ -1,9 +1,8 @@
+from music_graph.abstract.client import AbstractStreamingAPIClient
 from music_graph.datamodel.album import AlbumData
 from music_graph.datamodel.artist import ArtistData
 from music_graph.datamodel.playlist import PlaylistData
 from music_graph.datamodel.track import TrackData
-
-from music_graph.abstract.client import AbstractStreamingAPIClient
 from music_graph.datamodel.user_info import UserInfo
 
 
