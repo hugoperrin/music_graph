@@ -8,6 +8,8 @@ class PlaylistData:
     follower_number: int
     name: str
     uri: str
+    description: str
+    duration: float
     track_ids: List[str] = field(default_factory=list)
 
     @property
@@ -21,6 +23,8 @@ class PlaylistData:
             follower_number=playlist_data["followers"]["total"],
             uri=playlist_data["uri"],
             name=playlist_data["name"],
+            description="",  # There is no description data for spotify
+            duration=-1.0,  # There is no duration data for spotify
             track_ids=[t["track"]["id"] for t in playlist_data["tracks"]["items"]],
         )
 
@@ -31,4 +35,6 @@ class PlaylistData:
             "uri": self.uri,
             "name": self.name,
             "track_ids": self.track_ids,
+            "description": self.description,
+            "duration": self.duration,
         }
