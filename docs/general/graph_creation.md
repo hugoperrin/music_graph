@@ -6,17 +6,17 @@ TODO: do the script and serialization of a music graph
 
 To create and store a base graph:
 ```
-python -m music_graph.data.general_fetcher fetch_graph your_user_id 0
+python -m music_graph.data.general_fetcher fetch_graph_and_write your_user_id 0 your_path
 ```
 
 To create and store an augmented graph:
 ```
-python -m music_graph.data.general_fetcher fetch_graph your_user_id 1
+python -m music_graph.data.general_fetcher fetch_graph_and_write your_user_id 1 your_path
 ```
 
 To merge two separate graphs:
 ```
-python -m music_graph.data.general_fetcher merge_graphs graph_paths...
+python -m music_graph.data.general_fetcher merge_graphs_and_write graph_paths...
 ```
 
 ## Primary graph extraction
