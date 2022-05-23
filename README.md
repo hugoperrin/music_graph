@@ -8,10 +8,11 @@
 - [x] data fetcher for spotify API using [spotipy](https://github.com/plamere/spotipy)
 - [x] data fetcher for tidal API using [tidalapi](https://tidalapi.netlify.app/index.html)
 
-## Todos
+## TODOs
 
 * [ ] base the graph implementation from the naive current implementation to boost/networkx graph in order to use existing fast graph algorithms.
 * [ ] merging different APIs graphs
 * [ ] clustering of graph to create playlists and visualisation
 * [ ] recommendation based on extracted features (based solely on graph nodes and relationship + metadata)
 * [ ] recommendation based on textual features (artist bio + playlist description + lyrics)
+* [ ] recommendation based on musical features (music sample)
