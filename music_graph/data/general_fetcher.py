@@ -34,10 +34,6 @@ class GeneralFetcher(AbstractFetcher):
             graph = self.enhance_recursive_graph(graph=graph)
         return graph
 
-    def fetch_graph_and_write(self, user_id: str, path: str, augment_graph: bool = True):
-        g = super().fetch_graph(user_id, augment_graph)
-        g.write(path)
-
     def fetch_positive_graph(self, user_info: UserInfo) -> MusicGraph:
         if self.graph_building_mode == GraphBuildingModeEnum.ARTIST:
             return self.build_artist_graph(user_info)

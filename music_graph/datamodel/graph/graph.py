@@ -29,3 +29,9 @@ class MusicGraph:
     def read(path: str):
         # TODO: do the reading and deserialization here
         return None
+
+    @staticmethod
+    def merge(graphs: List):
+        # TODO: do the merging of multiple graphs
+        # Implies resolving artists which have different ids because different platforms
+        ...
