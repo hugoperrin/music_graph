@@ -16,3 +16,11 @@
 * [ ] recommendation based on extracted features (based solely on graph nodes and relationship + metadata)
 * [ ] recommendation based on textual features (artist bio + playlist description + lyrics)
 * [ ] recommendation based on musical features (music sample)
+
+## Idea
+
+1st Step: [Graph creation](docs/general/graph_creation.md)
+Possible 2nd steps:
+
+* [clustering to create playlists](docs/clustering/clustering.md)
+* [recommendations using that graph](docs/recommendation/recommendation_general.md)

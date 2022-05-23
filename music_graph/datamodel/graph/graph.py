@@ -20,3 +20,12 @@ class MusicGraph:
     def resolve_id(self, node: GraphNode) -> str:
         # TODO: do the resolving process to avoid duplicates between sources
         return node.id
+
+    def write(self, path: str) -> None:
+        # TODO: do the serialization and writing to a file here
+        ...
+
+    @staticmethod
+    def read(path: str):
+        # TODO: do the reading and deserialization here
+        return None

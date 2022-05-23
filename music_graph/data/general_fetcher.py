@@ -27,11 +27,16 @@ class GeneralFetcher(AbstractFetcher):
         self.client = client
         self.graph_building_mode = graph_building_mode
 
-    def fetch_graph(self, user_id: str) -> MusicGraph:
+    def fetch_graph(self, user_id: str, augment_graph: bool = True) -> MusicGraph:
         user_info = self.client.get_user_info(user_id=user_id)
         graph = self.fetch_positive_graph(user_info=user_info)
-        graph = self.enhance_recursive_graph(graph=graph)
+        if augment_graph:
+            graph = self.enhance_recursive_graph(graph=graph)
         return graph
+
+    def fetch_graph_and_write(self, user_id: str, path: str, augment_graph: bool = True):
+        g = super().fetch_graph(user_id, augment_graph)
+        g.write(path)
 
     def fetch_positive_graph(self, user_info: UserInfo) -> MusicGraph:
         if self.graph_building_mode == GraphBuildingModeEnum.ARTIST:
@@ -120,3 +125,14 @@ class GeneralFetcher(AbstractFetcher):
                 )
             )
         return graph
+
+
+if __name__ == "__main__":
+    import fire
+    from music_graph.utils.streaming_client_builder import (
+        StreamingClientAPIClientBuilder,
+    )
+
+    client, mode = StreamingClientAPIClientBuilder.from_env()
+    fetcher = GeneralFetcher(client=client, graSph_building_mode=mode)
+    fire.Fire(fetcher)
