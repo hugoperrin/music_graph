@@ -14,12 +14,18 @@ class NeighborData:
 @dataclass()
 class GraphNode:
     id: str
-    object: BaseData
+    object: Optional[BaseData]
     neighbor_ids: List[NeighborData]
     value: Optional[float] = None
 
     def to_node_dict(self, add_object_data: bool = False) -> Dict:
         base_data: Dict = {"id": self.id, "value": self.value}
-        if add_object_data:
+        if add_object_data and self.object is not None:
             base_data.update(self.object.to_dict())
         return base_data
+
+    @staticmethod
+    def from_dict(dict_data: Dict) -> "GraphNode":
+        return GraphNode(
+            id=dict_data["id"], value=dict_data["value"], neighbor_ids=[], object=None,
+        )

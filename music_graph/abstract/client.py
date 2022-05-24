@@ -40,3 +40,7 @@ class AbstractStreamingAPIClient:
     @abstractmethod
     def get_track_neighbors(self, track_id: str) -> List[str]:
         ...
+
+    @abstractmethod
+    def get_album_neighbors(self, track_id: str) -> List[str]:
+        ...
