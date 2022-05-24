@@ -191,6 +191,26 @@ class SpotifyStreamingAPIClient(AbstractStreamingAPIClient):
             "Spotify does not allow getting similar playlists from playlists"
         )
 
+    def get_album_neighbors(self, album_id: str) -> List[str]:
+        """Get similar albums => Spotify does not support similar albums => returns empty list all the time
+
+        Args:
+            album_id (str): The album id
+
+        Returns:
+            List[str]: The list of ids
+
+        Examples:
+            >>> client = SpotifyStreamingAPIClient.from_env()
+            >>> _id: str = "36QJpDe2go2KgaRleHCDTp"
+            >>> ids: List[str] = client.get_album_neighbors(_id)
+            >>> isinstance(ids, list)
+            True
+            >>> ids
+            []
+        """
+        return []
+
     def get_track_neighbors(self, track_id: str) -> List[str]:
         """Get similar tracks
 

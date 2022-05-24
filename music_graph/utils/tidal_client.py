@@ -1,5 +1,5 @@
 import os
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 import requests
 import tidalapi as tidal
@@ -157,7 +157,7 @@ class TidalStreamingAPIClient(AbstractStreamingAPIClient):
             >>> data: UserInfo = client.get_user_info(_id)
             >>> isinstance(data, UserInfo)
             True
-            >>> data.id == os.get_env("TIDAL_USER_ID")  # This is put as a secret as it's a secret and personnal information, can be modified in .env file
+            >>> data.id == os.getenv("TIDAL_USER_ID")  # This is put as a secret as it's a secret and personnal information, can be modified in .env file
             True
         """
         if user_id is None:
@@ -171,6 +171,63 @@ class TidalStreamingAPIClient(AbstractStreamingAPIClient):
             )
             user_data = self.tidal_session.get_user(user_id=user_id)
         return self.converter.user_converter(user_data=user_data)
+
+    def get_artist_neighbors(self, artist_id: str) -> List[str]:
+        """Get similar artists
+
+        Args:
+            artist_id (str): The artist id
+
+        Returns:
+            List[str]: The list of ids
+
+        Examples:
+            >>> client = TidalStreamingAPIClient.from_env()
+            >>> _id: str = "8215566"
+            >>> ids: List[str] = client.get_artist_neighbors(_id)
+            >>> isinstance(ids, list)
+            True
+            >>> ids
+            ['18987650', '3575134', '4016378', '4070117', '5585406', '56351', '5664250', '6279772', '6331905', '6352481', '6381216', '7481141', '7525938', '7559542', '7650315', '7773162']
+            >>> _id: str = "15099025"
+            >>> ids: List[str] = client.get_artist_neighbors(_id)
+            {"status":404,"subStatus":2001,"userMessage":"Similar artists for artist [15099025] not found"}
+            >>> isinstance(ids, list)
+            True
+            >>> ids
+            []
+        """
+        try:
+            similar_artists: List = self.tidal_session.get_artist_similar(
+                artist_id=artist_id,
+            )
+            return [str(a.id) for a in similar_artists]
+        except requests.exceptions.HTTPError:
+            # We can have an error 404 here whenever there are no similar artists provided by the API
+            return []
+
+    def get_album_neighbors(self, album_id: str) -> List[str]:
+        """Get similar albums => like spotify cannot find a way through Tidal API to get album neighbors
+
+        Args:
+            album_id (str): The album id
+
+        Returns:
+            List[str]: The list of ids
+
+        Examples:
+            >>> client = TidalStreamingAPIClient.from_env()
+            >>> _id: str = "209813264"
+            >>> ids: List[str] = client.get_album_neighbors(_id)
+            >>> isinstance(ids, list)
+            True
+            >>> ids
+            [211911358, 215507618, 222716543, 198677413, 223182050, 226787144, 225753010, 204327968, 222419033, 214758264, 223177137, 216698233, 211078893, 201278522, 225274037, 212738710, 197439810, 226100090, 216868234]
+        """
+        similar_albums: List = self.tidal_session.get_album_similar(
+            album_id=album_id,
+        )
+        return [alb.id for alb in similar_albums]
 
     @classmethod
     def from_env(cls):
