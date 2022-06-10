@@ -234,6 +234,49 @@ class SpotifyStreamingAPIClient(AbstractStreamingAPIClient):
         )
         return [t["id"] for t in similar_track_data["tracks"]]
 
+    def search(
+        self, str_value: str, search_limit: int = 10, res_type: str = "track",
+    ) -> List[Union[AlbumData, ArtistData, TrackData]]:
+        """Performs a search on a string
+
+        Args:
+            str_value (str): the string to search
+            search_limit (int, optional): The number of results to return. Defaults to 10.
+
+        Returns:
+            List: The list of the converted to datamodel results
+
+        Examples:
+            >>> client = SpotifyStreamingAPIClient.from_env()
+            >>> type_res: str = "track"
+            >>> search_str: str = "In the end"
+            >>> res = client.search(search_str, res_type=type_res)
+            >>> isinstance(res, list)
+            True
+            >>> type_res = "album"
+            >>> search_str = "Hybrid Theory"
+            >>> res = client.search(search_str, res_type=type_res)
+            >>> isinstance(res, list)
+            True
+            >>> type_res = "artist"
+            >>> search_str = "Linkin Park"
+            >>> res = client.search(search_str, res_type=type_res)
+            >>> isinstance(res, list)
+            True
+        """
+        res: List = self.spotify_client.search(
+            str_value, limit=search_limit, type=res_type,
+        )
+        formatted_res: List[Union[ArtistData, AlbumData, TrackData]] = []
+        for r in res:
+            converted: Union[AlbumData, ArtistData, TrackData] = self.convert(r)
+            formatted_res.append(converted)
+        return formatted_res
+
+    def convert(self, r: Dict) -> Union[AlbumData, ArtistData, TrackData]:
+        data = None
+        return data
+
     @classmethod
     def from_env(cls, scope: Optional[Union[str, Tuple]] = None):
         if scope is not None:

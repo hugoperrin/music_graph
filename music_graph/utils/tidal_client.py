@@ -224,9 +224,7 @@ class TidalStreamingAPIClient(AbstractStreamingAPIClient):
             >>> ids
             [211911358, 215507618, 222716543, 198677413, 223182050, 226787144, 225753010, 204327968, 222419033, 214758264, 223177137, 216698233, 211078893, 201278522, 225274037, 212738710, 197439810, 226100090, 216868234]
         """
-        similar_albums: List = self.tidal_session.get_album_similar(
-            album_id=album_id,
-        )
+        similar_albums: List = self.tidal_session.get_album_similar(album_id=album_id,)
         return [alb.id for alb in similar_albums]
 
     @classmethod

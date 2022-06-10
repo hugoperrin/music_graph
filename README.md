@@ -10,11 +10,11 @@
 
 ## TODOs
 
-* [ ] base the graph implementation from the naive current implementation to boost/networkx graph in order to use existing fast graph algorithms.
 * [ ] merging different APIs graphs
+* [ ] base the graph implementation from the naive current implementation to boost/networkx graph in order to use existing fast graph algorithms.
 * [ ] clustering of graph to create playlists and visualisation
-* [ ] recommendation based on extracted features (based solely on graph nodes and relationship + metadata)
 * [ ] recommendation based on textual features (artist bio + playlist description + lyrics)
+* [ ] recommendation based on extracted features (based solely on graph nodes and relationship + metadata)
 * [ ] recommendation based on musical features (music sample)
 
 ## Idea
