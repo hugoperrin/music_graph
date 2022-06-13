@@ -179,7 +179,7 @@ class SpotifyStreamingAPIClient(AbstractStreamingAPIClient):
             >>> isinstance(ids, list)
             True
             >>> ids
-            ['568ZhdwyaiCyOGJRtNYhWf', '776Uo845nYHJpNaStv1Ds4', '22WZ7M8sxp5THdruNY3gXt', '74oJ4qxwOZvX6oSsu1DGnw', '4MVyzYMgTwdP7Z49wAZHx0', '67ea9eGLXYMsO2eYQRui3w', '0qEcf3SFlpRcb3lK3f2GZI', '2AM4ilv6UzW0uMRuqKtDgN', '00tVTdpEhQQw1bqdu8RCx2', '5M52tdBnJaKSvOpJGz8mfZ', '1OwarW4LEHnoep20ixRA0y', '1WRM9i067hd2ujxxi8FI3m', '5krkohEVJYw0qoB5VWwxaC', '6biWAmrHyiMkX49LkycGqQ', '2e53aHBQdCMKWqHDuyJsjC', '6QtGlUje9TIkLrgPZrESuk', '21ysNsPzHdqYN2fQ75ZswG', '22bE4uQ6baNwSHPVcDxLCe', '4wQ3PyMz3WwJGI5uEqHUVR', '2lxX1ivRYp26soIavdG9bX']
+            ['568ZhdwyaiCyOGJRtNYhWf', '776Uo845nYHJpNaStv1Ds4', '22WZ7M8sxp5THdruNY3gXt', '74oJ4qxwOZvX6oSsu1DGnw', '4MVyzYMgTwdP7Z49wAZHx0', '0qEcf3SFlpRcb3lK3f2GZI', '67ea9eGLXYMsO2eYQRui3w', '2e53aHBQdCMKWqHDuyJsjC', '00tVTdpEhQQw1bqdu8RCx2', '2AM4ilv6UzW0uMRuqKtDgN', '5M52tdBnJaKSvOpJGz8mfZ', '1OwarW4LEHnoep20ixRA0y', '1WRM9i067hd2ujxxi8FI3m', '5krkohEVJYw0qoB5VWwxaC', '6biWAmrHyiMkX49LkycGqQ', '2lxX1ivRYp26soIavdG9bX', '21ysNsPzHdqYN2fQ75ZswG', '6QtGlUje9TIkLrgPZrESuk', '2rc78XDH9zuJP6bm78lU8Z', '4wQ3PyMz3WwJGI5uEqHUVR']
         """
         similar_artists: Dict = self.spotify_client.artist_related_artists(
             artist_id=artist_id
@@ -267,15 +267,24 @@ class SpotifyStreamingAPIClient(AbstractStreamingAPIClient):
         res: List = self.spotify_client.search(
             str_value, limit=search_limit, type=res_type,
         )
-        formatted_res: List[Union[ArtistData, AlbumData, TrackData]] = []
-        for r in res:
-            converted: Union[AlbumData, ArtistData, TrackData] = self.convert(r)
-            formatted_res.append(converted)
+        formatted_res: List[
+            Union[ArtistData, AlbumData, TrackData]
+        ] = self.convert_search_result(res)
         return formatted_res
 
-    def convert(self, r: Dict) -> Union[AlbumData, ArtistData, TrackData]:
-        data = None
-        return data
+    def convert_search_result(
+        self, res: Dict
+    ) -> List[Union[ArtistData, AlbumData, TrackData]]:
+        formatted_res: List[Union[ArtistData, AlbumData, TrackData]] = []
+        if "tracks" in res:
+            formatted_res += [
+                TrackData.from_spotify_dict(d["id"], d) for d in res["tracks"]["items"]
+            ]
+        if "albums" in res:
+            formatted_res += [self.get_album(d["id"]) for d in res["albums"]["items"]]
+        if "artists" in res:
+            formatted_res += [self.get_artist(d["id"]) for d in res["artists"]["items"]]
+        return formatted_res
 
     @classmethod
     def from_env(cls, scope: Optional[Union[str, Tuple]] = None):
@@ -283,5 +292,4 @@ class SpotifyStreamingAPIClient(AbstractStreamingAPIClient):
             spotify = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope))
         else:
             spotify = spotipy.Spotify(auth_manager=SpotifyClientCredentials())
-        spotify.current_user()
         return cls(spotify)

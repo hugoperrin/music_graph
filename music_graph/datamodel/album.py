@@ -28,7 +28,7 @@ class AlbumData:
             href=album_data["href"],
             number_of_tracks=album_data["total_tracks"],
             artist_ids=[d["id"] for d in album_data["artists"]],
-            genres=album_data["genres"],
+            genres=album_data.get("genres", []),
             track_ids=[d["id"] for d in album_data["tracks"]["items"]],
         )
 
