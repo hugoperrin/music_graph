@@ -153,7 +153,7 @@ class Segment:
 
 @dataclass()
 class AudioAnalysis:
-    """ Audio analysis object based on Spotify data (#TODO: determine if Tidal and so on provide such data as well)
+    """ Audio analysis object based on Spotify data
         Based on the following documentation from Spotify: https://developer.spotify.com/documentation/web-api/reference/#/operations/get-audio-analysis
     """
 

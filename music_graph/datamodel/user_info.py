@@ -45,3 +45,20 @@ class UserInfo:
             if saved_albums is None
             else [a["album"]["id"] for a in saved_albums["items"]],
         )
+
+    @property
+    def data_id(self) -> str:
+        return self.id
+
+    def to_dict(self) -> Dict:
+        return {
+            "id": self.id,
+            "display_name": self.display_name,
+            "href": self.href,
+            "uri": self.uri,
+            "playlist_ids": self.playlist_ids,
+            "artist_ids": self.playlist_ids,
+            "top_track_ids": self.top_track_ids,
+            "saved_tracks_ids": self.saved_track_ids,
+            "saved_album_ids": self.saved_album_ids,
+        }

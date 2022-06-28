@@ -1,5 +1,4 @@
 from abc import abstractmethod
-from os import path
 from typing import List
 
 from music_graph.datamodel.graph.graph import MusicGraph

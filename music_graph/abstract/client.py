@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import List
+from typing import List, Union
 
 from music_graph.datamodel.album import AlbumData
 from music_graph.datamodel.artist import ArtistData
@@ -40,3 +40,12 @@ class AbstractStreamingAPIClient:
     @abstractmethod
     def get_track_neighbors(self, track_id: str) -> List[str]:
         ...
+
+    @abstractmethod
+    def get_album_neighbors(self, track_id: str) -> List[str]:
+        ...
+
+    def search(
+        self, str_value: str, res_type: str = "track"
+    ) -> List[Union[AlbumData, ArtistData, TrackData]]:
+        raise NotImplementedError("Search not available with this client")
